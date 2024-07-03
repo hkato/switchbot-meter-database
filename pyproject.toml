@@ -28,3 +28,6 @@ line-length = 120
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+switchbot-influxdb = "switchbot_influxdb.main:main"
