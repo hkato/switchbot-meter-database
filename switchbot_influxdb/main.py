@@ -14,8 +14,8 @@ from switchbot import SwitchBot
 from switchbot.devices import Device
 
 # Logging
-formatter = "[%(levelname)-8s] %(asctime)s %(funcName)s %(message)s"
-logging.basicConfig(level=logging.INFO, format=formatter)
+FORMATTER = "[%(levelname)-8s] %(asctime)s %(funcName)s %(message)s"
+logging.basicConfig(level=logging.INFO, format=FORMATTER)
 logger = logging.getLogger(__name__)
 
 # SwitchBot
@@ -63,7 +63,7 @@ def task(influxdb_access, switchbot_access, meter_devices):
         try:
             status = device.status()
         except Exception as e:
-            logging.error(f"Request error: {e}")
+            logging.error("Request error: %s", e)
             continue
 
         try:
@@ -80,9 +80,9 @@ def task(influxdb_access, switchbot_access, meter_devices):
             client = InfluxDBClient(url=influxdb_access.url, token=influxdb_access.token, org=influxdb_access.org)
             write_api = client.write_api(write_options=SYNCHRONOUS)
             write_api.write(bucket=influxdb_access.bucket, record=p)
-            logging.info(f"Saved: {status}")
+            logging.info("Saved: %s", status)
         except Exception as e:
-            logging.error(f"Save error: {e}")
+            logging.error("Save error: %s", e)
 
 
 def main():
@@ -109,7 +109,7 @@ def main():
     for device in switchbot.devices():
         meter_devices[device.id] = device.type
 
-    logger.info(f"Meter devices: {meter_devices}")
+    logger.info("Meter devices: %s", meter_devices)
 
     task(influxdb_access, switchbot_access, meter_devices)
     if args.daemon:
