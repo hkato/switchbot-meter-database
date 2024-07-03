@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "switchbot-influxdb"
 version = "0.1.0"
-description = "Write meter data(temperture/humidity/light leve) to InfluxDB"
+description = "Write SwitchBot environmental sensor data to InfluxDB"
 authors = ["Hideyuki KATO <hideyuki@kato.jp>"]
 license = "MIT"
 readme = "README.md"
@@ -20,6 +20,9 @@ black = "^22.12.0"
 isort = "^5.11.4"
 pytest = "^7.2.0"
 types-requests = "^2.28.11.15"
+
+[tool.black]
+line-length = 120
 
 [build-system]
 requires = ["poetry-core"]
