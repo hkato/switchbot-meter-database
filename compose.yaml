@@ -5,7 +5,7 @@ services:
     container_name: switchbot-influxdb
     tty: true
     environment:
-      - SWITCHBOT_ACCESS_TOKEN=${SWITCHBOT_ACCESS_TOKEN}
+      - SWITCHBOT_TOKEN=${SWITCHBOT_TOKEN}
       - SWITCHBOT_SECRET=${SWITCHBOT_SECRET}
       - INFLUXDB_URL=${INFLUXDB_URL}
       - INFLUXDB_ORG=${INFLUXDB_ORG}
