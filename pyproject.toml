@@ -1,11 +1,10 @@
 [tool.poetry]
-name = "switchbot-dashboard"
+name = "switchbot-influxdb"
 version = "0.1.0"
-description = "Dashboard for Switchbot using InfluxDB and Grafana"
-authors = ["Your Name <you@example.com>"]
+description = "Write meter data(temperture/humidity/light leve) to InfluxDB"
+authors = ["Hideyuki KATO <hideyuki@kato.jp>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
