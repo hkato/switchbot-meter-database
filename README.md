@@ -93,4 +93,4 @@ from(bucket: "switchbot")    // your_bucket
   |> filter(fn: (r) => r["_field"] == "temperature")
 ```
 
-![Grafana](grafana-influx-switchbot.png)
+![Grafana](images/grafana-influx-switchbot.png)
