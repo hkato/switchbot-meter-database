@@ -1,7 +1,7 @@
 services:
   switchbot:
     build: .
-    image: hkato/switchbot-influxdb
+    image: switchbot-influxdb
     container_name: switchbot-influxdb
     tty: true
     environment:
