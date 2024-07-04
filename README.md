@@ -2,6 +2,10 @@
 
 Write SwitchBot environmental sensor data to InfluxDB
 
+## Overview
+
+![Overview](images/overview.png)
+
 ## Supported devices
 
 | name                    | deviceType | remarks    |
