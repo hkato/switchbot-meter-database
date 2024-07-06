@@ -10,11 +10,11 @@ Write SwitchBot environmental sensor data to InfluxDB
 
 | name                    | deviceType | remarks    |
 |-------------------------|------------|------------|
-| SwitchBot Meter         | Meter      | not tested |
+| SwitchBot Meter         | Meter      |            |
 | SwitchBot Meter Plus    | MeterPlus  | not tested |
 | SwitchBot Outdoor Meter | WoIOSensor | not tested |
 | SwitchBot Humidifier    | Humidifier | not tested |
-| SwitchBot Hub 2         | Hub 2      | tested     |
+| SwitchBot Hub 2         | Hub 2      |            |
 
 ## Usage
 
@@ -66,10 +66,14 @@ $ switchbot-influxdb -d \
 Log messages
 
 ```sh
-[INFO    ] 2024-07-03 20:01:26,955 main Start
-[INFO    ] 2024-07-03 20:01:29,249 main Meter devices: {'XXXXXXXXXXXX': 'Hub 2'}
-[INFO    ] 2024-07-03 20:01:33,373 task Saved: {'device_id': 'XXXXXXXXXXXX', 'device_type': 'hub2', 'hub_device_id': 'XXXXXXXXXXXX', 'humidity': 66, 'temperature': '28.2', 'light_level': 12, 'version': 'V1.0-1.1'}
-[INFO    ] 2024-07-03 20:06:33,433 task Saved: {'device_id': 'XXXXXXXXXXXX', 'device_type': 'hub2', 'hub_device_id': 'XXXXXXXXXXXX', 'humidity': 66, 'temperature': '28.2', 'light_level': 12, 'version': 'V1.0-1.1'}
+[INFO    ] 2024-07-06 18:02:11,860 main Start
+[INFO    ] 2024-07-06 18:02:14,159 main Meter devices: {'XXXXXXXXXXXX': 'Meter', 'YYYYYYYYYYYY': 'Hub 2', 'ZZZZZZZZZZZZ': 'Meter'}
+[INFO    ] 2024-07-06 18:02:17,845 task Saved: {'device_id': 'XXXXXXXXXXXX', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 59, 'temperature': '27.8', 'version': 'V2.5', 'battery': 100}
+[INFO    ] 2024-07-06 18:02:20,848 task Saved: {'device_id': 'YYYYYYYYYYYY', 'device_type': 'hub2', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 60, 'temperature': '28.5', 'light_level': 13, 'version': 'V1.0-1.1'}
+[INFO    ] 2024-07-06 18:02:24,181 task Saved: {'device_id': 'ZZZZZZZZZZZZ', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 58, 'temperature': '28.1', 'version': 'V2.5', 'battery': 78}
+[INFO    ] 2024-07-06 18:07:28,564 task Saved: {'device_id': 'XXXXXXXXXXXX', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 59, 'temperature': '27.8', 'version': 'V2.5', 'battery': 100}
+[INFO    ] 2024-07-06 18:07:31,827 task Saved: {'device_id': 'YYYYYYYYYYYY', 'device_type': 'hub2', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 60, 'temperature': '28.5', 'light_level': 13, 'version': 'V1.0-1.1'}
+[INFO    ] 2024-07-06 18:07:35,313 task Saved: {'device_id': 'ZZZZZZZZZZZZ', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 58, 'temperature': '28.1', 'version': 'V2.5', 'battery': 78}
 ...
 ```
 
