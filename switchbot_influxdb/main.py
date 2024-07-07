@@ -59,8 +59,8 @@ def task(influxdb_access, switchbot_access, meter_devices):
     switchbot = SwitchBotMeter(token=switchbot_access.token, secret=switchbot_access.secret)
 
     for device_id in meter_devices.keys():
-        device = switchbot.device(device_id)
         try:
+            device = switchbot.device(device_id)
             status = device.status()
         except Exception as e:
             logging.error("Request error: %s", e)
