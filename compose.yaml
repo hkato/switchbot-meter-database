@@ -4,6 +4,7 @@ services:
     image: switchbot-influxdb
     container_name: switchbot-influxdb
     tty: true
+    restart: always
     environment:
       - SWITCHBOT_TOKEN=${SWITCHBOT_TOKEN}
       - SWITCHBOT_SECRET=${SWITCHBOT_SECRET}
