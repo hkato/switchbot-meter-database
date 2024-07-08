@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "switchbot-influxdb"
+name = "switchbot-meter-influxdb"
 version = "0.1.0"
 description = "Write SwitchBot environmental sensor data to InfluxDB"
 authors = ["Hideyuki KATO <hideyuki@kato.jp>"]
@@ -30,4 +30,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-switchbot-influxdb = "switchbot_influxdb.main:main"
+switchbot-meter-influxdb = "switchbot_meter_influxdb.main:main"

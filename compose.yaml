@@ -1,8 +1,8 @@
 services:
   switchbot:
     build: .
-    image: switchbot-influxdb
-    container_name: switchbot-influxdb
+    image: switchbot-meter-influxdb
+    container_name: switchbot-meter-influxdb
     tty: true
     restart: always
     environment:

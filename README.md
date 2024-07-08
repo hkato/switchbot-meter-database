@@ -1,4 +1,4 @@
-# SwitchBot-InfluxDB
+# SwitchBot Meter - InfluxDB
 
 Write SwitchBot environmental sensor data to InfluxDB
 
@@ -32,15 +32,15 @@ export INFLUXDB_TOKEN=your_influxdb_token
 Run as daemon
 
 ```sh
-switchbot-influx -d
+switchbot-meter-influx -d
 ```
 
 or command line options
 
 ```sh
-switchbot-influxdb --help
+switchbot-meter-influxdb --help
 
-usage: switchbot-influxdb [-h] [-d] [-t TIME] [--url URL] [--token TOKEN] [--org ORG] [--bucket BUCKET] [--switchbot-token SWITCHBOT_TOKEN] [--switchbot-secret SWITCHBOT_SECRET]
+usage: switchbot-meter-influxdb [-h] [-d] [-t TIME] [--url URL] [--token TOKEN] [--org ORG] [--bucket BUCKET] [--switchbot-token SWITCHBOT_TOKEN] [--switchbot-secret SWITCHBOT_SECRET]
 
 options:
   -h, --help            show this help message and exit
@@ -58,7 +58,7 @@ options:
 ```
 
 ```sh
-$ switchbot-influxdb -d \
+$ switchbot-meter-influxdb -d \
     --url http://influxdb:8086 --org your_org --bucket your_bucket --token your_token \
     --switchbot-token your_token --switchbot-secret your_secret
 ```
@@ -86,7 +86,7 @@ cp .env.example .env
 vi .env
 ```
 
-### Start SwitchBot-InfluxDB service
+### Start SwitchBot-Meter-InfluxDB service
 
 ```sh
 docker compose build
@@ -98,7 +98,7 @@ docker compose up -d && docker compose logs -f
 ```sql
 from(bucket: "switchbot")    // your_bucket
   |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-  |> filter(fn: (r) => r["_field"] == "temperature")
+  |> filter(fn: (r) => r["_field"] == "temperature")    // or humidity
 ```
 
 ![Grafana](images/grafana-influx-switchbot.png)

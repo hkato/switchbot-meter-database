@@ -6,8 +6,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 # COPY source
-COPY . /build/switchbot-influxdb
-WORKDIR /build/switchbot-influxdb
+COPY . /build
+WORKDIR /build
 
 # Build package
 RUN "$HOME"/.local/bin/poetry build
@@ -15,7 +15,7 @@ RUN "$HOME"/.local/bin/poetry build
 FROM python:3.11-slim
 
 # Install package
-COPY --from=builder /build/switchbot-influxdb/dist/switchbot_influxdb-*.whl /tmp
-RUN pip install --no-cache-dir /tmp/switchbot_influxdb-*.whl
+COPY --from=builder /build/dist/switchbot_meter_influxdb-*.whl /tmp
+RUN pip install --no-cache-dir /tmp/switchbot_meter_influxdb-*.whl
 
-ENTRYPOINT [ "switchbot-influxdb", "-d" ]
+ENTRYPOINT [ "switchbot-meter-influxdb", "-d" ]
