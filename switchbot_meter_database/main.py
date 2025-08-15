@@ -9,7 +9,8 @@ from switchbot import SwitchBot
 from switchbot.devices import Device
 
 from switchbot_meter_database.devices import SUPPORTED_DEVICES
-from switchbot_meter_database.influxdb import DatabaseConfig, put_data
+from switchbot_meter_database.influxdb import InfluxDBConfig, InfluxDBWriter
+from switchbot_meter_database.mongodb import MongoDBConfig, MongoDBWriter
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -39,7 +40,7 @@ class SwitchBotMeter(SwitchBot):
         ]
 
 
-def task(database_config, switchbot_access, meter_devices):
+def task(database_writer, switchbot_access, meter_devices):
     """定期実行するタスク"""
     switchbot = SwitchBotMeter(
         token=switchbot_access.token, secret=switchbot_access.secret
@@ -55,7 +56,7 @@ def task(database_config, switchbot_access, meter_devices):
             continue
 
         try:
-            put_data(database_config, device.type, status)
+            database_writer.put_data(device.type, status)
         except Exception as e:
             logging.error("Save error: %s", e)
 
@@ -91,9 +92,12 @@ def main():
             influxdb_org = os.environ["INFLUXDB_ORG"]
             influxdb_bucket = os.environ["INFLUXDB_BUCKET"]
 
-            database_config = DatabaseConfig(
+            database_config = InfluxDBConfig(
                 influxdb_url, influxdb_token, influxdb_org, influxdb_bucket
             )
+
+            database_writer = InfluxDBWriter()
+            database_writer.config_database(database_config)
 
         except KeyError as e:
             logging.error("Environment variable not set: %s", e)
@@ -106,9 +110,11 @@ def main():
             mongodb_username = os.environ["MONGODB_USERNAME"]
             mongodb_password = os.environ["MONGODB_PASSWORD"]
 
-            database_config = DatabaseConfig(
+            database_config = MongoDBConfig(
                 mongodb_uri, mongodb_collection, mongodb_username, mongodb_password
             )
+            database_writer = MongoDBWriter()
+            database_writer.config_database(database_config)
 
         except KeyError as e:
             logging.error("Environment variable not set: %s", e)
@@ -126,7 +132,7 @@ def main():
 
     logger.info("Meter devices: %s", meter_devices)
 
-    task(database_config, switchbot_credentials, meter_devices)
+    task(database_writer, switchbot_credentials, meter_devices)
 
 
 if __name__ == "__main__":
