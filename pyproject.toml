@@ -1,33 +1,35 @@
-[tool.poetry]
+[project]
 name = "switchbot-meter-influxdb"
 version = "0.1.0"
 description = "Write SwitchBot environmental sensor data to InfluxDB"
-authors = ["Hideyuki KATO <hideyuki@kato.jp>"]
-license = "MIT"
+authors = [{ name = "Hideyuki KATO", email = "hideyuki@kato.jp" }]
+requires-python = ">=3.13"
 readme = "README.md"
+license = "MIT"
+dependencies = [
+    "requests>=2.28.2,<3",
+    "influxdb-client>=1.36.1,<2",
+    "schedule>=1.1.0,<2",
+    "python-switchbot>=2.3.1,<3",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-requests = "^2.28.2"
-influxdb-client = "^1.36.1"
-schedule = "^1.1.0"
-python-switchbot = "^2.3.1"
+[project.scripts]
+switchbot-meter-influxdb = "switchbot_meter_influxdb.main:main"
 
-[tool.poetry.group.dev.dependencies]
-flake8 = "^6.0.0"
-mypy = "^0.991"
-black = "^22.12.0"
-isort = "^5.11.4"
-pytest = "^7.2.0"
-types-requests = "^2.28.11.15"
-pylint = "^3.2.5"
+[dependency-groups]
+dev = [
+    "flake8>=6.0.0,<7",
+    "mypy>=0.991,<0.992",
+    "black>=22.12.0,<23",
+    "isort>=5.11.4,<6",
+    "pytest>=7.2.0,<8",
+    "types-requests>=2.28.11.15,<3",
+    "pylint>=3.2.5,<4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.black]
 line-length = 120
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-switchbot-meter-influxdb = "switchbot_meter_influxdb.main:main"
