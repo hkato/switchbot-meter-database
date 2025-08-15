@@ -1,6 +1,0 @@
-.venv/
-.vscode/
-dist/
-docker/
-images/
-.env*
