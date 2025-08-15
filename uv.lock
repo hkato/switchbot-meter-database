@@ -338,7 +338,7 @@ wheels = [
 ]
 
 [[package]]
-name = "switchbot-meter-influxdb"
+name = "switchbot-meter-database"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

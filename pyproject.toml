@@ -1,5 +1,5 @@
 [project]
-name = "switchbot-meter-influxdb"
+name = "switchbot-meter-database"
 version = "0.1.0"
 description = "Write SwitchBot environmental sensor data to InfluxDB"
 authors = [{ name = "Hideyuki KATO", email = "hideyuki@kato.jp" }]
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-switchbot-meter-influxdb = "switchbot_meter_influxdb.main:main"
+switchbot-meter-database = "switchbot_meter_database.main:main"
 
 [dependency-groups]
 dev = [

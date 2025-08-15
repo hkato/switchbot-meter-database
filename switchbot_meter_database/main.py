@@ -1,4 +1,4 @@
-"""Write SwitchBot environmental sensor data to InfluxDB"""
+"""Ingest SwitchBot environmental sensor data into InfluxDB or MongoDB"""
 
 import argparse
 import dataclasses
@@ -9,16 +9,19 @@ from typing import List
 from switchbot import SwitchBot
 from switchbot.devices import Device
 
-from switchbot_meter_influxdb.devices import SUPPORTED_DEVICES
-from switchbot_meter_influxdb.influx import AccessConfig, save_influx
-from switchbot_meter_influxdb.logger import set_logger
+from switchbot_meter_database.devices import SUPPORTED_DEVICES
+from switchbot_meter_database.influx import AccessConfig, put_data
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)-8s] %(funcName)s %(message)s",
+)
 
 
 @dataclasses.dataclass
 class SwitchBotAccess:
-    """SwitchBot access data"""
+    """SwitchBot API credentials"""
 
     token: str
     secret: str
@@ -53,7 +56,7 @@ def task(influxdb_access, switchbot_access, meter_devices):
             continue
 
         try:
-            save_influx(influxdb_access, device.type, status)
+            put_data(influxdb_access, device.type, status)
         except Exception as e:
             logging.error("Save error: %s", e)
 
@@ -61,8 +64,6 @@ def task(influxdb_access, switchbot_access, meter_devices):
 def main():
     """CLI main"""
     parser = argparse.ArgumentParser()
-    # parser.add_argument("-d", "--daemon", action="store_true", help="Daemon mode")
-    # parser.add_argument("-t", "--time", default=5, help="Time interval", type=int)
     parser.add_argument("--url", default=os.getenv("INFLUXDB_URL"), help="InfluxDB URL")
     parser.add_argument(
         "--token", default=os.getenv("INFLUXDB_TOKEN"), help="InfluxDB token"
@@ -104,5 +105,4 @@ def main():
 
 
 if __name__ == "__main__":
-    set_logger()
     main()

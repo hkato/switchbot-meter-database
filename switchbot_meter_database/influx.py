@@ -4,7 +4,7 @@ import logging
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-from switchbot_meter_influxdb.devices import LIGHT_LEVEL_SUPPORTED_DEVICES
+from switchbot_meter_database.devices import LIGHT_LEVEL_SUPPORTED_DEVICES
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ class AccessConfig:
     bucket: str
 
 
-def save_influx(influxdb_access, device_type, device_status):
+def put_data(influxdb_access, device_type, device_status):
     try:
         p = (
             Point(device_type)
