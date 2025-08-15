@@ -39,7 +39,7 @@ class SwitchBotMeter(SwitchBot):
         ]
 
 
-def task(influxdb_access, switchbot_access, meter_devices):
+def task(database_config, switchbot_access, meter_devices):
     """定期実行するタスク"""
     switchbot = SwitchBotMeter(
         token=switchbot_access.token, secret=switchbot_access.secret
@@ -55,7 +55,7 @@ def task(influxdb_access, switchbot_access, meter_devices):
             continue
 
         try:
-            put_data(influxdb_access, device.type, status)
+            put_data(database_config, device.type, status)
         except Exception as e:
             logging.error("Save error: %s", e)
 
@@ -91,7 +91,7 @@ def main():
             influxdb_org = os.environ["INFLUXDB_ORG"]
             influxdb_bucket = os.environ["INFLUXDB_BUCKET"]
 
-            influxdb_config = DatabaseConfig(
+            database_config = DatabaseConfig(
                 influxdb_url, influxdb_token, influxdb_org, influxdb_bucket
             )
 
@@ -103,11 +103,11 @@ def main():
         try:
             mongodb_uri = os.environ["MONGODB_URI"]
             mongodb_collection = os.environ["MONGODB_COLLECTION"]
-            mongodb_user = os.environ["MONGODB_USER"]
+            mongodb_username = os.environ["MONGODB_USERNAME"]
             mongodb_password = os.environ["MONGODB_PASSWORD"]
 
-            mongodb_config = DatabaseConfig(
-                mongodb_uri, mongodb_collection, mongodb_user, mongodb_password
+            database_config = DatabaseConfig(
+                mongodb_uri, mongodb_collection, mongodb_username, mongodb_password
             )
 
         except KeyError as e:
@@ -126,7 +126,7 @@ def main():
 
     logger.info("Meter devices: %s", meter_devices)
 
-    task(influxdb_config, switchbot_credentials, meter_devices)
+    task(database_config, switchbot_credentials, meter_devices)
 
 
 if __name__ == "__main__":
