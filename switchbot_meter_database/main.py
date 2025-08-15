@@ -9,7 +9,7 @@ from switchbot import SwitchBot
 from switchbot.devices import Device
 
 from switchbot_meter_database.devices import SUPPORTED_DEVICES
-from switchbot_meter_database.influx import AccessConfig, put_data
+from switchbot_meter_database.influxdb import DatabaseConfig, put_data
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -91,7 +91,7 @@ def main():
             influxdb_org = os.environ["INFLUXDB_ORG"]
             influxdb_bucket = os.environ["INFLUXDB_BUCKET"]
 
-            influxdb_config = AccessConfig(
+            influxdb_config = DatabaseConfig(
                 influxdb_url, influxdb_token, influxdb_org, influxdb_bucket
             )
 
@@ -106,7 +106,7 @@ def main():
             mongodb_user = os.environ["MONGODB_USER"]
             mongodb_password = os.environ["MONGODB_PASSWORD"]
 
-            mongodb_config = AccessConfig(
+            mongodb_config = DatabaseConfig(
                 mongodb_uri, mongodb_collection, mongodb_user, mongodb_password
             )
 

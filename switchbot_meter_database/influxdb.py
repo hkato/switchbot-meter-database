@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 @dataclasses.dataclass
-class AccessConfig:
-    """InfluxDB access data"""
+class DatabaseConfig:
+    """InfluxDB configuration"""
 
     url: str
     token: str
