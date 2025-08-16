@@ -1,6 +1,6 @@
-# SwitchBot Meter - InfluxDB
+# SwitchBot Meter - InfluxDB/MongoDB
 
-Write SwitchBot environmental sensor data to InfluxDB
+Ingest SwitchBot environmental sensor data into InfluxDB or MongoDB
 
 ## Overview
 
@@ -20,85 +20,106 @@ Write SwitchBot environmental sensor data to InfluxDB
 
 Set environmental variables
 
+### InfluxDB
+
 ```sh
 export SWITCHBOT_ACCESS_TOKEN=your_switchbot_token
 export SWITCHBOT_SECRET=your_switchbot_secret
+
+export DATABASE=influxdb
 export INFLUXDB_URL=http://influxdb:8086
 export INFLUXDB_ORG=your_org
 export INFLUXDB_BUCKET=your_bucket
 export INFLUXDB_TOKEN=your_influxdb_token
 ```
 
-Run as daemon
+### MongoDB
 
 ```sh
-switchbot-meter-influx -d
-```
+export SWITCHBOT_ACCESS_TOKEN=your_switchbot_token
+export SWITCHBOT_SECRET=your_switchbot_secret
 
-or command line options
-
-```sh
-switchbot-meter-influxdb --help
-
-usage: switchbot-meter-influxdb [-h] [-d] [-t TIME] [--url URL] [--token TOKEN] [--org ORG] [--bucket BUCKET] [--switchbot-token SWITCHBOT_TOKEN] [--switchbot-secret SWITCHBOT_SECRET]
-
-options:
-  -h, --help            show this help message and exit
-  -d, --daemon          Daemon mode
-  -t TIME, --time TIME  Time interval
-  --url URL             InfluxDB URL
-  --token TOKEN         InfluxDB token
-  --org ORG             InfluxDB organization
-  --bucket BUCKET       InfluxDB bucket
-  --switchbot-token SWITCHBOT_TOKEN
-                        SwitchBot token
-  --switchbot-secret SWITCHBOT_SECRET
-                        SwitchBot secret
-
+export DATABASE=mongodb
+export MONGODB_URI=mongodb://localhost:27017
+export MONGODB_DATABASE=switchbot
+export MONGODB_COLLECTION=meter
+export MONGODB_USERNAME=switchbot
+export MONGODB_PASSWORD=switchbot
 ```
 
 ```sh
-$ switchbot-meter-influxdb -d \
-    --url http://influxdb:8086 --org your_org --bucket your_bucket --token your_token \
-    --switchbot-token your_token --switchbot-secret your_secret
+$ switchbot-meter-influxdb
 ```
 
 Log messages
 
 ```sh
-[INFO    ] 2024-07-06 18:02:11,860 main Start
-[INFO    ] 2024-07-06 18:02:14,159 main Meter devices: {'XXXXXXXXXXXX': 'Meter', 'YYYYYYYYYYYY': 'Hub 2', 'ZZZZZZZZZZZZ': 'Meter'}
-[INFO    ] 2024-07-06 18:02:17,845 task Saved: {'device_id': 'XXXXXXXXXXXX', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 59, 'temperature': '27.8', 'version': 'V2.5', 'battery': 100}
-[INFO    ] 2024-07-06 18:02:20,848 task Saved: {'device_id': 'YYYYYYYYYYYY', 'device_type': 'hub2', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 60, 'temperature': '28.5', 'light_level': 13, 'version': 'V1.0-1.1'}
-[INFO    ] 2024-07-06 18:02:24,181 task Saved: {'device_id': 'ZZZZZZZZZZZZ', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 58, 'temperature': '28.1', 'version': 'V2.5', 'battery': 78}
-[INFO    ] 2024-07-06 18:07:28,564 task Saved: {'device_id': 'XXXXXXXXXXXX', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 59, 'temperature': '27.8', 'version': 'V2.5', 'battery': 100}
-[INFO    ] 2024-07-06 18:07:31,827 task Saved: {'device_id': 'YYYYYYYYYYYY', 'device_type': 'hub2', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 60, 'temperature': '28.5', 'light_level': 13, 'version': 'V1.0-1.1'}
-[INFO    ] 2024-07-06 18:07:35,313 task Saved: {'device_id': 'ZZZZZZZZZZZZ', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY', 'humidity': 58, 'temperature': '28.1', 'version': 'V2.5', 'battery': 78}
+2025-08-15 20:48:06,606 [INFO    ] main Start
+2025-08-15 20:48:06,746 [INFO    ] main Meter devices: {'XXXXXXXXXXXX': 'Meter', 'YYYYYYYYYYYY': 'Hub 2', 'ZZZZZZZZZZZZ': 'Meter'}
+2025-08-15 20:48:06,746 [INFO    ] task Processing device: XXXXXXXXXXXX
+2025-08-15 20:48:06,897 [INFO    ] put_data Writing Meter to InfluxDB...
+2025-08-15 20:48:07,574 [INFO    ] put_data Saved: {'version': 'V3.3', 'temperature': '27.6', 'battery': 100, 'humidity': 55, 'device_id': 'XXXXXXXXXXXX', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY'}
+2025-08-15 20:48:07,577 [INFO    ] task Processing device: YYYYYYYYYYYY
+2025-08-15 20:48:07,676 [INFO    ] put_data Writing Hub 2 to InfluxDB...
+2025-08-15 20:48:08,321 [INFO    ] put_data Saved: {'version': 'V2.3-1.4', 'temperature': '27.2', 'light_level': 12, 'humidity': 71, 'device_id': 'YYYYYYYYYYYY', 'device_type': 'hub2', 'hub_device_id': 'YYYYYYYYYYYY'}
+2025-08-15 20:48:08,324 [INFO    ] task Processing device: ZZZZZZZZZZZZ
+2025-08-15 20:48:08,428 [INFO    ] put_data Writing Meter to InfluxDB...
+2025-08-15 20:48:09,097 [INFO    ] put_data Saved: {'version': 'V3.3', 'temperature': '24.5', 'battery': 100, 'humidity': 62, 'device_id': 'ZZZZZZZZZZZZ', 'device_type': 'meter', 'hub_device_id': 'YYYYYYYYYYYY'}
 ...
 ```
 
-## Docker usage
+## Grafana usage
 
-### Create and update .env file
-
-```sh
-cp .env.example .env
-vi .env
-```
-
-### Start SwitchBot-Meter-InfluxDB service
-
-```sh
-docker compose build
-docker compose up -d && docker compose logs -f
-```
-
-## Grafana Influx query
+### InfluxDB query
 
 ```sql
 from(bucket: "switchbot")    // your_bucket
   |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
   |> filter(fn: (r) => r["_field"] == "temperature")    // or humidity
 ```
+
+### MongoDB query
+
+```javascript
+db.switchbot.aggregate([
+  {
+    $match: {
+      "timestamp": {
+        $gte: "$__timeFrom",
+        $lte: "$__timeTo"
+      }
+    }
+  },
+  {
+    $group: {
+      _id: {
+        time: {
+          $dateTrunc: {
+            date: "$timestamp",
+            unit: "minute"
+          }
+        },
+        device_id: "$metadata.device_id"
+      },
+      value: { $avg: "$temperature" }
+    }
+  },
+  {
+    $project: {
+      "time": "$_id.time",
+      "value": "$value",
+      "metric": "$_id.device_id",
+      "_id": 0
+    }
+  },
+  {
+    $sort: {
+      "time": 1
+    }
+  }
+])
+```
+
+### Grafana dashboard
 
 ![Grafana](images/grafana-influx-switchbot.png)
