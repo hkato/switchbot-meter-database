@@ -131,12 +131,14 @@ def main():
         token=switchbot_credentials.token, secret=switchbot_credentials.secret
     )
 
+    # Get all meter devices
     meter_devices = {}
     for device in switchbot.devices():
         meter_devices[device.id] = device.type
 
     logger.info("Meter devices: %s", meter_devices)
 
+    # Save data to the database
     task(database_writer, switchbot_credentials, meter_devices)
 
 

@@ -1,3 +1,6 @@
+"""Database configuration and writing classes"""
+
+
 class DatabaseWriterBase:
     def config_database(self, database_config):
         pass

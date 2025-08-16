@@ -1,3 +1,5 @@
+"""MongoDB connection and data writing module."""
+
 import dataclasses
 import logging
 from datetime import datetime, timezone
@@ -9,11 +11,14 @@ from switchbot_meter_database.devices import LIGHT_LEVEL_SUPPORTED_DEVICES
 
 logger = logging.getLogger(__name__)
 
+# MongoDB timeseries collection options
 TIMESERIES_OPTIONS = {
     "timeField": "timestamp",
     "metaField": "device_id",
     "granularity": "seconds",
 }
+# MongoDB TTL index options
+TTL_SECONDS = 10 * 365 * 24 * 3600  # 10 years
 
 
 @dataclasses.dataclass
@@ -28,7 +33,11 @@ class MongoDBConfig:
 
 
 class MongoDBWriter(DatabaseWriterBase):
+    """MongoDB writer class"""
+
     def config_database(self, database_config: MongoDBConfig):
+        """Configure the MongoDB database connection."""
+
         self.config = database_config
 
         self.client = MongoClient(
@@ -44,13 +53,19 @@ class MongoDBWriter(DatabaseWriterBase):
                 f"Creating collection {self.config.collection} in database {self.database.name}"
             )
             self.database.create_collection(
-                self.config.collection, timeseries=TIMESERIES_OPTIONS
+                self.config.collection,
+                timeseries=TIMESERIES_OPTIONS,
+                expireAfterSeconds=TTL_SECONDS,
             )
 
         self.collection = self.database[self.config.collection]
 
     def put_data(self, device_type, device_status):
+        """Write device status data to MongoDB."""
+
         logger.info(f"Writing {device_type} to MongoDB...")
+        logger.info("Device status: %s", device_status)
+
         try:
             timestamp = datetime.now(timezone.utc)
             doc = {
@@ -64,8 +79,6 @@ class MongoDBWriter(DatabaseWriterBase):
 
             self.collection.insert_one(doc)
 
-            # self.client.close()
-
-            logger.info("Saved: %s", device_status)
+            logger.info("Saved: %s", doc)
         except Exception as e:
             raise RuntimeError(f"Failed to save data to MongoDB: {e}") from e

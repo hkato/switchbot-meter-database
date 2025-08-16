@@ -1,3 +1,5 @@
+"""InfluxDB connection and data writing module."""
+
 import dataclasses
 import logging
 
@@ -21,11 +23,19 @@ class InfluxDBConfig:
 
 
 class InfluxDBWriter(DatabaseWriterBase):
-    def config_database(self, database_config: InfluxDBConfig):
-        self.config = database_config
+    """InfluxDB writer class"""
+
+    def config_database(self, config: InfluxDBConfig):
+        """Configure the InfluxDB database connection."""
+
+        self.config = config
 
     def put_data(self, device_type, device_status):
+        """Write device status data to InfluxDB."""
+
         logger.info(f"Writing {device_type} to InfluxDB...")
+        logger.info("Device status: %s", device_status)
+
         try:
             p = (
                 Point(device_type)
@@ -44,7 +54,7 @@ class InfluxDBWriter(DatabaseWriterBase):
             )
             write_api = client.write_api(write_options=SYNCHRONOUS)
             write_api.write(bucket=self.config.bucket, record=p)
-            logger.info("Saved: %s", device_status)
+            logger.info("Saved: %s", p)
 
         except Exception as e:
             raise RuntimeError(f"Failed to save data to InfluxDB: {e}") from e
