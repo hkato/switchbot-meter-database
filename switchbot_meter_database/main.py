@@ -106,12 +106,17 @@ def main():
         # MongoDB configuration
         try:
             mongodb_uri = os.environ["MONGODB_URI"]
+            mongodb_database = os.environ["MONGODB_DATABASE"]
             mongodb_collection = os.environ["MONGODB_COLLECTION"]
             mongodb_username = os.environ["MONGODB_USERNAME"]
             mongodb_password = os.environ["MONGODB_PASSWORD"]
 
             database_config = MongoDBConfig(
-                mongodb_uri, mongodb_collection, mongodb_username, mongodb_password
+                mongodb_uri,
+                mongodb_database,
+                mongodb_collection,
+                mongodb_username,
+                mongodb_password,
             )
             database_writer = MongoDBWriter()
             database_writer.config_database(database_config)
