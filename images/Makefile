@@ -1,7 +1,7 @@
 DRAWIO_CLI = /Applications/draw.io.app/Contents/MacOS/draw.io
 DRAWIO_FLAGS = -x -f png
 
-SRCS = overview.drawio
+SRCS = overview.drawio my-system.drawio
 PNGS = $(SRCS:%.drawio=%.png)
 
 convert: $(PNGS)

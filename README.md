@@ -123,3 +123,9 @@ db.switchbot.aggregate([
 ### Grafana dashboard
 
 ![Grafana](images/grafana-influx-switchbot.png)
+
+## System Architecture Example
+
+This is my system built using the **free tiers** of AWS, Grafana, and MongoDB.
+
+![](images/my-system.png)
