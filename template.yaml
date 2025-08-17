@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Database:
+    Type: String
+  SwitchbotToken:
+    Type: String
+  SwitchbotSecret:
+    Type: String
+  MongoDBUri:
+    Type: String
+  MongoDBDatabase:
+    Type: String
+  MongoDBCollection:
+    Type: String
+  MongoDBUsername:
+    Type: String
+  MongoDBPassword:
+    Type: String
+
+Resources:
+  # Lambda Handler
+  LambdaHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.handler
+      Timeout: 30
+      CodeUri: ./lambda_handler/
+      Runtime: python3.12
+      Environment:
+        Variables:
+          DATABASE: !Ref Database
+          SWITCHBOT_TOKEN: !Ref SwitchbotToken
+          SWITCHBOT_SECRET: !Ref SwitchbotSecret
+          MONGODB_URI: !Ref MongoDBUri
+          MONGODB_DATABASE: !Ref MongoDBDatabase
+          MONGODB_COLLECTION: !Ref MongoDBCollection
+          MONGODB_USERNAME: !Ref MongoDBUsername
+          MONGODB_PASSWORD: !Ref MongoDBPassword
+      # Events:
+      #   ScheduledEvent:
+      #     Type: Schedule
+      #     Properties:
+      #       Schedule: rate(5 minutes)
+      Layers:
+        - !Ref LambdaLayer
+
+  # Lambda Layer
+  LambdaLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ./
+      CompatibleRuntimes:
+        - python3.12
+      Description: Python packages for Lambda functions.
+    Metadata:
+      BuildMethod: makefile
+      BuildProperties:
+        Target: build-layer
