@@ -3,7 +3,7 @@ name = "switchbot-meter-database"
 version = "0.1.0"
 description = "Ingest SwitchBot environmental sensor data into InfluxDB or MongoDB"
 authors = [{ name = "Hideyuki KATO", email = "hideyuki@kato.jp" }]
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 readme = "README.md"
 license = "MIT"
 dependencies = [
