@@ -38,11 +38,11 @@ Resources:
           MONGODB_COLLECTION: !Ref MongoDBCollection
           MONGODB_USERNAME: !Ref MongoDBUsername
           MONGODB_PASSWORD: !Ref MongoDBPassword
-      # Events:
-      #   ScheduledEvent:
-      #     Type: Schedule
-      #     Properties:
-      #       Schedule: rate(5 minutes)
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(5 minutes)
       Layers:
         - !Ref LambdaLayer
 
@@ -58,3 +58,10 @@ Resources:
       BuildMethod: makefile
       BuildProperties:
         Target: build-layer
+
+  # CloudWatch Logs
+  LambdaHandlerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${LambdaHandler}
+      RetentionInDays: 30
