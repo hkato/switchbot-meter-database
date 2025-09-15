@@ -1,0 +1,5 @@
+{
+  "bucket": "my-terraform-bucket",
+  "key": "switchbot-meter-database/terraform.tfstate",
+  "region": "ap-northeast-1"
+}
