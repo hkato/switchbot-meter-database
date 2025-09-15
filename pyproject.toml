@@ -15,14 +15,11 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "flake8>=6.0.0,<7",
-    "mypy>=0.991,<0.992",
-    "black>=22.12.0,<23",
-    "isort>=5.11.4,<6",
-    "pytest>=7.2.0,<8",
     "types-requests>=2.28.11.15,<3",
-    "pylint>=3.2.5,<4",
 ]
 
 [tool.black]
-line-length = 120
+line-length = 119
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
