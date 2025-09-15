@@ -7,4 +7,4 @@ set -a
 source .env
 set +a
 
-switchbot-meter-database
+uv run -m switchbot_meter_database.main

@@ -6,8 +6,8 @@ import logging
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-from switchbot_meter_database.database import DatabaseWriterBase
-from switchbot_meter_database.devices import LIGHT_LEVEL_SUPPORTED_DEVICES
+from .database import DatabaseWriterBase
+from .devices import LIGHT_LEVEL_SUPPORTED_DEVICES
 
 logger = logging.getLogger(__name__)
 

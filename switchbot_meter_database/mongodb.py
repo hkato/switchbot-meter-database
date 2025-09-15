@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 
 from pymongo import MongoClient
 
-from switchbot_meter_database.database import DatabaseWriterBase
-from switchbot_meter_database.devices import LIGHT_LEVEL_SUPPORTED_DEVICES
+from .database import DatabaseWriterBase
+from .devices import LIGHT_LEVEL_SUPPORTED_DEVICES
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class MongoDBWriter(DatabaseWriterBase):
 
         self.config = database_config
 
-        self.client = MongoClient(
+        self.client: MongoClient = MongoClient(
             self.config.uri,
             username=self.config.username,
             password=self.config.password,

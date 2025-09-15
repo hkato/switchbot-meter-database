@@ -8,9 +8,9 @@ from typing import List
 from switchbot import SwitchBot
 from switchbot.devices import Device
 
-from switchbot_meter_database.devices import SUPPORTED_DEVICES
-from switchbot_meter_database.influxdb import InfluxDBConfig, InfluxDBWriter
-from switchbot_meter_database.mongodb import MongoDBConfig, MongoDBWriter
+from .devices import SUPPORTED_DEVICES
+from .influxdb import InfluxDBConfig, InfluxDBWriter
+from .mongodb import MongoDBConfig, MongoDBWriter
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
