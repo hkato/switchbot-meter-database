@@ -7,5 +7,4 @@ s3_prefix = "switchbot-meter-database"
 region = "ap-northeast-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "Database=\"\" SwitchbotToken=\"\" SwitchbotSecret=\"\" MongoDBUri=\"\" MongoDBDatabase=\"\" MongoDBCollection=\"\" MongoDBUsername=\"\" MongoDBPassword=\"\""
 image_repositories = []

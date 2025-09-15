@@ -16,22 +16,24 @@ Parameters:
     Type: String
     Default: arm64
     Description: The architecture of the Lambda function
-  Database:
+  SwitchbotTokenParamName:
     Type: String
-  SwitchbotToken:
+    Default: /switchbot-meter-database/switchbot-token
+  SwitchbotSecretParamName:
     Type: String
-  SwitchbotSecret:
+    Default: /switchbot-meter-database/switchbot-secret
+  DatabaseParamName:
     Type: String
-  MongoDBUri:
+    Default: /switchbot-meter-database/database
+  MongoDBUriParamName:
     Type: String
-  MongoDBDatabase:
+    Default: /switchbot-meter-database/mongodb-uri
+  MongoDBDatabaseParamName:
     Type: String
-  MongoDBCollection:
+    Default: /switchbot-meter-database/mongodb-database
+  MongoDBCollectionParamName:
     Type: String
-  MongoDBUsername:
-    Type: String
-  MongoDBPassword:
-    Type: String
+    Default: /switchbot-meter-database/mongodb-collection
 
 Resources:
   SwitchBotDatabase:
@@ -45,14 +47,25 @@ Resources:
       CodeUri: src/
       Environment:
         Variables:
-          DATABASE: !Ref Database
-          SWITCHBOT_TOKEN: !Ref SwitchbotToken
-          SWITCHBOT_SECRET: !Ref SwitchbotSecret
-          MONGODB_URI: !Ref MongoDBUri
-          MONGODB_DATABASE: !Ref MongoDBDatabase
-          MONGODB_COLLECTION: !Ref MongoDBCollection
-          MONGODB_USERNAME: !Ref MongoDBUsername
-          MONGODB_PASSWORD: !Ref MongoDBPassword
+          DATABASE_PATH: !Ref DatabaseParamName
+          SWITCHBOT_TOKEN_PATH: !Ref SwitchbotTokenParamName
+          SWITCHBOT_SECRET_PATH: !Ref SwitchbotSecretParamName
+          MONGODB_URI_PATH: !Ref MongoDBUriParamName
+          MONGODB_DATABASE_PATH: !Ref MongoDBDatabaseParamName
+          MONGODB_COLLECTION_PATH: !Ref MongoDBCollectionParamName
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - 'ssm:GetParameter'
+              Resource:
+                - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SwitchbotTokenParamName}'
+                - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SwitchbotSecretParamName}'
+                - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${DatabaseParamName}'
+                - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${MongoDBUriParamName}'
+                - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${MongoDBDatabaseParamName}'
+                - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${MongoDBCollectionParamName}'
+
       # Events:
       #   ScheduledEvent:
       #     Type: Schedule

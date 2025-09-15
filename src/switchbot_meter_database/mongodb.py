@@ -28,8 +28,6 @@ class MongoDBConfig:
     uri: str
     database: str
     collection: str
-    username: str
-    password: str
 
 
 class MongoDBWriter(DatabaseWriterBase):
@@ -42,8 +40,6 @@ class MongoDBWriter(DatabaseWriterBase):
 
         self.client: MongoClient = MongoClient(
             self.config.uri,
-            username=self.config.username,
-            password=self.config.password,
         )
 
         self.database = self.client[self.config.database]
