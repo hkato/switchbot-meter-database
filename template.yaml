@@ -43,8 +43,9 @@ Resources:
       Architectures:
         - !Ref Architecture
       Handler: lambda.handler
-      Timeout: 30
       CodeUri: src/
+      Layers:
+        - !Ref SwitchBotDatabaseDependenciesLayer
       Environment:
         Variables:
           DATABASE_PATH: !Ref DatabaseParamName
@@ -65,14 +66,11 @@ Resources:
                 - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${MongoDBUriParamName}'
                 - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${MongoDBDatabaseParamName}'
                 - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${MongoDBCollectionParamName}'
-
-      # Events:
-      #   ScheduledEvent:
-      #     Type: Schedule
-      #     Properties:
-      #       Schedule: rate(5 minutes)
-      Layers:
-        - !Ref SwitchBotDatabaseDependenciesLayer
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(5 minutes)
 
   # Lambda Layer
   SwitchBotDatabaseDependenciesLayer:
