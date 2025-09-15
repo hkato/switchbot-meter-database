@@ -1,7 +1,21 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 128
+    Runtime: !Ref Runtime
+
 Parameters:
+  Runtime:
+    Type: String
+    Default: python3.12
+    Description: The runtime of the Lambda function
+  Architecture:
+    Type: String
+    Default: arm64
+    Description: The architecture of the Lambda function
   Database:
     Type: String
   SwitchbotToken:
@@ -20,14 +34,15 @@ Parameters:
     Type: String
 
 Resources:
-  # Lambda Handler
-  LambdaHandler:
+  SwitchBotDatabase:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: app.handler
+      Runtime: !Ref Runtime
+      Architectures:
+        - !Ref Architecture
+      Handler: lambda.handler
       Timeout: 30
-      CodeUri: ./lambda_handler/
-      Runtime: python3.12
+      CodeUri: src/
       Environment:
         Variables:
           DATABASE: !Ref Database
@@ -38,30 +53,31 @@ Resources:
           MONGODB_COLLECTION: !Ref MongoDBCollection
           MONGODB_USERNAME: !Ref MongoDBUsername
           MONGODB_PASSWORD: !Ref MongoDBPassword
-      Events:
-        ScheduledEvent:
-          Type: Schedule
-          Properties:
-            Schedule: rate(5 minutes)
+      # Events:
+      #   ScheduledEvent:
+      #     Type: Schedule
+      #     Properties:
+      #       Schedule: rate(5 minutes)
       Layers:
-        - !Ref LambdaLayer
+        - !Ref SwitchBotDatabaseDependenciesLayer
 
   # Lambda Layer
-  LambdaLayer:
+  SwitchBotDatabaseDependenciesLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      ContentUri: ./
+      ContentUri: lambda_layer
       CompatibleRuntimes:
-        - python3.12
+        - !Ref Runtime
+      CompatibleArchitectures:
+        - !Ref Architecture
       Description: Python packages for Lambda functions.
     Metadata:
-      BuildMethod: makefile
-      BuildProperties:
-        Target: build-layer
+      BuildMethod: !Ref Runtime
+      BuildArchitecture: !Ref Architecture
 
   # CloudWatch Logs
-  LambdaHandlerLogGroup:
+  SwitchBotDatabaseLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub /aws/lambda/${LambdaHandler}
+      LogGroupName: !Sub /aws/lambda/${SwitchBotDatabase}
       RetentionInDays: 30

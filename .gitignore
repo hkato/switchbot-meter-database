@@ -53,7 +53,8 @@ terraform.rc
 
 # Virtual environments
 .venv
-
 .env
 
 .aws-sam/
+lambda_layer/
+

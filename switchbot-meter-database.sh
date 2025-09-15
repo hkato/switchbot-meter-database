@@ -7,4 +7,5 @@ set -a
 source .env
 set +a
 
+cd src
 uv run -m switchbot_meter_database.main

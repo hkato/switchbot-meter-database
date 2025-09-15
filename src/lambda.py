@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from .main import main
+from switchbot_meter_database.main import main
 
 
 def handler(event, context):
