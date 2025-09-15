@@ -199,6 +199,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "types-influxdb-client" },
     { name = "types-requests" },
 ]
 
@@ -211,7 +212,22 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "types-requests", specifier = ">=2.28.11.15,<3" }]
+dev = [
+    { name = "types-influxdb-client", specifier = ">=1.45.0.20241221" },
+    { name = "types-requests", specifier = ">=2.28.11.15,<3" },
+]
+
+[[package]]
+name = "types-influxdb-client"
+version = "1.45.0.20241221"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/12/5f/abd3ab276e5f88738570ccf044548c81b6b43018e689b0153a68bbfe2e71/types_influxdb_client-1.45.0.20241221.tar.gz", hash = "sha256:9a643c3cbc2e607179858bf3cf888355e522ad9e358149d53107aa2c9d1a3ec8", size = 78686, upload-time = "2024-12-21T02:42:21.179Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8f/92/590689c98158ece6347dc47421d27d7419a30319d28f4d92353174ecef28/types_influxdb_client-1.45.0.20241221-py3-none-any.whl", hash = "sha256:599a40595e5ccdda2d396357cbc586f21bc06e26ead5ed9e27c36ce02adaa505", size = 227717, upload-time = "2024-12-21T02:42:20.044Z" },
+]
 
 [[package]]
 name = "types-requests"

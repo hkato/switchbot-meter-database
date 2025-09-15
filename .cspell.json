@@ -1,5 +1,13 @@
 {
   "language": "en",
   "version": "0.2",
-  "words": ["dotenv", "tfstate", "tfvars"]
+  "words": [
+    "dotenv",
+    "levelname",
+    "pymongo",
+    "switchbot",
+    "tfstate",
+    "tfvars",
+    "venv"
+  ]
 }
