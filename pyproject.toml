@@ -20,7 +20,7 @@ dev = [
     "types-requests>=2.28.11.15,<3",
 ]
 
-[tool.black]
+[tool.ruff]
 line-length = 119
 
 [tool.ruff.lint]
