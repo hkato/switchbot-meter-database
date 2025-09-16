@@ -45,9 +45,7 @@ class MongoDBWriter(DatabaseWriterBase):
         self.database = self.client[self.config.database]
 
         if self.config.collection not in self.database.list_collection_names():
-            logger.info(
-                f"Creating collection {self.config.collection} in database {self.database.name}"
-            )
+            logger.info(f"Creating collection {self.config.collection} in database {self.database.name}")
             self.database.create_collection(
                 self.config.collection,
                 timeseries=TIMESERIES_OPTIONS,

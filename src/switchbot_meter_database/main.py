@@ -42,9 +42,7 @@ class SwitchBotMeter(SwitchBot):
 
 def task(database_writer, switchbot_access, meter_devices):
     """定期実行するタスク"""
-    switchbot = SwitchBotMeter(
-        token=switchbot_access.token, secret=switchbot_access.secret
-    )
+    switchbot = SwitchBotMeter(token=switchbot_access.token, secret=switchbot_access.secret)
 
     for device_id in meter_devices.keys():
         logger.info(f"Processing device: {device_id}")
@@ -92,9 +90,7 @@ def main():
             influxdb_org = os.environ["INFLUXDB_ORG"]
             influxdb_bucket = os.environ["INFLUXDB_BUCKET"]
 
-            database_config = InfluxDBConfig(
-                influxdb_url, influxdb_token, influxdb_org, influxdb_bucket
-            )
+            database_config = InfluxDBConfig(influxdb_url, influxdb_token, influxdb_org, influxdb_bucket)
 
             database_writer = InfluxDBWriter()
             database_writer.config_database(database_config)
@@ -123,9 +119,7 @@ def main():
 
     logger.info("Start")
 
-    switchbot = SwitchBotMeter(
-        token=switchbot_credentials.token, secret=switchbot_credentials.secret
-    )
+    switchbot = SwitchBotMeter(token=switchbot_credentials.token, secret=switchbot_credentials.secret)
 
     # Get all meter devices
     meter_devices = {}
