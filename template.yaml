@@ -46,6 +46,7 @@ Resources:
       CodeUri: src/
       Layers:
         - !Ref SwitchBotDatabaseDependenciesLayer
+        - !Sub arn:aws:lambda:${AWS::Region}:133490724326:layer:AWS-Parameters-and-Secrets-Lambda-Extension-Arm64:19
       Environment:
         Variables:
           DATABASE_PATH: !Ref DatabaseParamName
@@ -66,6 +67,10 @@ Resources:
                 - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${MongoDBUriParamName}'
                 - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${MongoDBDatabaseParamName}'
                 - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${MongoDBCollectionParamName}'
+            - Effect: Allow
+              Action:
+                - 'kms:Decrypt'
+              Resource: !Sub "arn:aws:kms:${AWS::Region}:${AWS::AccountId}:alias/aws/ssm"
       Events:
         ScheduledEvent:
           Type: Schedule

@@ -1,64 +1,50 @@
 import logging
 import os
 import sys
+import urllib.parse
 
-import boto3
+import requests
 
 from switchbot_meter_database.main import main
 
 
-def set_env_from_ssm():
-    ssm_client = boto3.client("ssm")
+def get_secret_from_extension(parameter_name, with_decryption=False):
+    encoded_parameter_name = urllib.parse.quote(parameter_name, safe="/")
 
-    response = ssm_client.get_parameter(
-        Name=os.environ.get(
-            "SWITCHBOT_TOKEN_PATH", "/switchbot-meter-database/switchbot-token"
-        ),
-        WithDecryption=True,
-    )
-    os.environ["SWITCHBOT_TOKEN"] = response["Parameter"]["Value"]
+    url = f"http://localhost:2773/systemsmanager/parameters/get/?name={encoded_parameter_name}"
+    if with_decryption:
+        url += "&withDecryption=true"
 
-    response = ssm_client.get_parameter(
-        Name=os.environ.get(
-            "SWITCHBOT_SECRET_PATH", "/switchbot-meter-database/switchbot-secret"
-        ),
-        WithDecryption=True,
-    )
-    os.environ["SWITCHBOT_SECRET"] = response["Parameter"]["Value"]
+    headers = {"X-Aws-Parameters-Secrets-Token": os.environ.get("AWS_SESSION_TOKEN")}
 
-    response = ssm_client.get_parameter(
-        Name=os.environ.get("DATABASE_PATH", "/switchbot-meter-database/database"),
-        WithDecryption=False,
-    )
-    os.environ["DATABASE"] = response["Parameter"]["Value"]
-
-    response = ssm_client.get_parameter(
-        Name=os.environ.get(
-            "MONGODB_URI_PATH", "/switchbot-meter-database/mongodb-uri"
-        ),
-        WithDecryption=True,
-    )
-    os.environ["MONGODB_URI"] = response["Parameter"]["Value"]
-
-    response = ssm_client.get_parameter(
-        Name=os.environ.get(
-            "MONGODB_DATABASE_PATH", "/switchbot-meter-database/mongodb-database"
-        ),
-        WithDecryption=False,
-    )
-    os.environ["MONGODB_DATABASE"] = response["Parameter"]["Value"]
-
-    response = ssm_client.get_parameter(
-        Name=os.environ.get(
-            "MONGODB_COLLECTION_PATH", "/switchbot-meter-database/mongodb-collection"
-        ),
-        WithDecryption=False,
-    )
-    os.environ["MONGODB_COLLECTION"] = response["Parameter"]["Value"]
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()["Parameter"]["Value"]
 
 
 def handler(event, context):
-    set_env_from_ssm()
+    """
+    AWS Lambda handler function
+    """
+    # Set environment variables from AWS Parameters and Secrets Extension
+    os.environ["SWITCHBOT_TOKEN"] = get_secret_from_extension(
+        os.environ.get("SWITCHBOT_TOKEN_PATH", "/switchbot-meter-database/switchbot-token"), True
+    )
+    os.environ["SWITCHBOT_SECRET"] = get_secret_from_extension(
+        os.environ.get("SWITCHBOT_SECRET_PATH", "/switchbot-meter-database/switchbot-secret"), True
+    )
+    os.environ["DATABASE"] = get_secret_from_extension(
+        os.environ.get("DATABASE_PATH", "/switchbot-meter-database/database")
+    )
+    os.environ["MONGODB_URI"] = get_secret_from_extension(
+        os.environ.get("MONGODB_URI_PATH", "/switchbot-meter-database/mongodb-uri"), True
+    )
+    os.environ["MONGODB_DATABASE"] = get_secret_from_extension(
+        os.environ.get("MONGODB_DATABASE_PATH", "/switchbot-meter-database/mongodb-database")
+    )
+    os.environ["MONGODB_COLLECTION"] = get_secret_from_extension(
+        os.environ.get("MONGODB_COLLECTION_PATH", "/switchbot-meter-database/mongodb-collection")
+    )
 
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
