@@ -59,7 +59,7 @@ def main():
 
     print("Start")
 
-    switchbot = SwitchBotMeter(token=switchbot_token, secret=switchbot_secret)
+    switchbot = SwitchBotMeter(switchbot_token, switchbot_secret)
 
     # Get all meter devices
     meter_devices = {}
