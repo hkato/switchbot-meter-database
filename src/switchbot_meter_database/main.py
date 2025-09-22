@@ -1,7 +1,6 @@
 """Ingest SwitchBot environmental sensor data into InfluxDB or MongoDB"""
 
 import dataclasses
-import logging
 import os
 from typing import List
 
@@ -11,12 +10,6 @@ from switchbot.devices import Device
 from .devices import SUPPORTED_DEVICES
 from .influxdb import InfluxDBConfig, InfluxDBWriter
 from .mongodb import MongoDBConfig, MongoDBWriter
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)-8s] %(funcName)s %(message)s",
-)
 
 
 @dataclasses.dataclass
@@ -45,18 +38,18 @@ def task(database_writer, switchbot_access, meter_devices):
     switchbot = SwitchBotMeter(token=switchbot_access.token, secret=switchbot_access.secret)
 
     for device_id in meter_devices.keys():
-        logger.info(f"Processing device: {device_id}")
+        print(f"Processing device: {device_id}")
         try:
             device = switchbot.device(device_id)
             status = device.status()
         except Exception as e:
-            logging.error("Request error: %s", e)
+            print("Request error: %s", e)
             continue
 
         try:
             database_writer.put_data(device.type, status)
         except Exception as e:
-            logging.error("Save error: %s", e)
+            print("Save error: %s", e)
 
 
 def main():
@@ -67,7 +60,7 @@ def main():
         switchbot_token = os.environ["SWITCHBOT_TOKEN"]
         switchbot_secret = os.environ["SWITCHBOT_SECRET"]
     except KeyError as e:
-        logging.error("Environment variable not set: %s", e)
+        print("Environment variable not set: %s", e)
         return
 
     switchbot_credentials = SwitchBotCredentials(switchbot_token, switchbot_secret)
@@ -76,10 +69,10 @@ def main():
     try:
         database = os.environ["DATABASE"]
         if database not in ["influxdb", "mongodb"]:
-            logging.error("Unsupported database: %s", database)
+            print("Unsupported database: %s", database)
             return
     except KeyError as e:
-        logging.error("Environment variable not set: %s", e)
+        print("Environment variable not set: %s", e)
         return
 
     if database == "influxdb":
@@ -96,7 +89,7 @@ def main():
             database_writer.config_database(database_config)
 
         except KeyError as e:
-            logging.error("Environment variable not set: %s", e)
+            print("Environment variable not set: %s", e)
             return
     elif database == "mongodb":
         # MongoDB configuration
@@ -114,10 +107,10 @@ def main():
             database_writer.config_database(database_config)
 
         except KeyError as e:
-            logging.error("Environment variable not set: %s", e)
+            print("Environment variable not set: %s", e)
             return
 
-    logger.info("Start")
+    print("Start")
 
     switchbot = SwitchBotMeter(token=switchbot_credentials.token, secret=switchbot_credentials.secret)
 
@@ -126,7 +119,7 @@ def main():
     for device in switchbot.devices():
         meter_devices[device.id] = device.type
 
-    logger.info("Meter devices: %s", meter_devices)
+    print("Meter devices: %s", meter_devices)
 
     # Save data to the database
     task(database_writer, switchbot_credentials, meter_devices)

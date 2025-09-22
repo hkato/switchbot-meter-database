@@ -1,6 +1,4 @@
-import logging
 import os
-import sys
 import urllib.parse
 
 import requests
@@ -46,17 +44,7 @@ def handler(event, context):
         os.environ.get("MONGODB_COLLECTION_PATH", "/switchbot-meter-database/mongodb-collection")
     )
 
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
-
-    logging.basicConfig(
-        level=logging.INFO,
-        format="[%(levelname)-8s] %(funcName)s %(message)s",
-        stream=sys.stdout,
-    )
-
-    logger = logging.getLogger(__name__)
-    logger.info("Handler invoked with event: %s", event)
+    print("Handler invoked with event: %s", event)
 
     main()
 

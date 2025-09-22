@@ -1,15 +1,12 @@
 """MongoDB connection and data writing module."""
 
 import dataclasses
-import logging
 from datetime import datetime, timezone
 
 from pymongo import MongoClient
 
 from .database import DatabaseWriterBase
 from .devices import LIGHT_LEVEL_SUPPORTED_DEVICES
-
-logger = logging.getLogger(__name__)
 
 # MongoDB timeseries collection options
 TIMESERIES_OPTIONS = {
@@ -45,7 +42,7 @@ class MongoDBWriter(DatabaseWriterBase):
         self.database = self.client[self.config.database]
 
         if self.config.collection not in self.database.list_collection_names():
-            logger.info(f"Creating collection {self.config.collection} in database {self.database.name}")
+            print(f"Creating collection {self.config.collection} in database {self.database.name}")
             self.database.create_collection(
                 self.config.collection,
                 timeseries=TIMESERIES_OPTIONS,
@@ -57,8 +54,8 @@ class MongoDBWriter(DatabaseWriterBase):
     def put_data(self, device_type, device_status):
         """Write device status data to MongoDB."""
 
-        logger.info(f"Writing {device_type} to MongoDB...")
-        logger.info("Device status: %s", device_status)
+        print(f"Writing {device_type} to MongoDB...")
+        print("Device status: %s", device_status)
 
         try:
             timestamp = datetime.now(timezone.utc)
@@ -73,6 +70,6 @@ class MongoDBWriter(DatabaseWriterBase):
 
             self.collection.insert_one(doc)
 
-            logger.info("Saved: %s", doc)
+            print("Saved: %s", doc)
         except Exception as e:
             raise RuntimeError(f"Failed to save data to MongoDB: {e}") from e
