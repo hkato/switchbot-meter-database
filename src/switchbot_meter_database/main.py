@@ -12,10 +12,10 @@ from .mongodb import MongoDBConfig, MongoDBWriter
 
 
 class SwitchBotMeter(SwitchBot):
-    """SwitchBotのうち環境センサー(temperature/humidity/lightLevel)をサポートするデバイスの継承クラス"""
+    """SwitchBot for devices supporting environmental sensors (temperature/humidity/lightLevel)"""
 
     def devices(self) -> List[Device]:
-        """環境センサーデバイス一覧のみを返す"""
+        """Returns only the list of environmental sensor devices."""
         response = self.client.get("devices")
         return [
             Device.create(client=self.client, id=device["device_id"], **device)
@@ -25,6 +25,8 @@ class SwitchBotMeter(SwitchBot):
 
 
 def main():
+    print("Start")
+
     # SwitchBot credentials
     switchbot_token = os.environ["SWITCHBOT_TOKEN"]
     switchbot_secret = os.environ["SWITCHBOT_SECRET"]
@@ -57,8 +59,6 @@ def main():
         database_writer = MongoDBWriter()
         database_writer.config_database(database_config)
 
-    print("Start")
-
     switchbot = SwitchBotMeter(switchbot_token, switchbot_secret)
 
     # Get all meter devices
@@ -69,7 +69,6 @@ def main():
     print("Meter devices: %s", meter_devices)
 
     # Save data to the database
-
     for device_id in meter_devices.keys():
         print(f"Processing device: {device_id}")
         try:
