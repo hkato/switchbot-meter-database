@@ -16,6 +16,10 @@ Parameters:
     Type: String
     Default: arm64
     Description: The architecture of the Lambda function
+  AWSParametersAndSecretsLambdaExtension:
+    Type: String
+    Default: arn:aws:lambda:ap-northeast-1:133490724326:layer:AWS-Parameters-and-Secrets-Lambda-Extension-Arm64:19
+    Description: AWS Parameters and Secrets Lambda Extension
   SwitchbotTokenParamName:
     Type: String
     Default: /switchbot-meter-database/switchbot-token
@@ -46,7 +50,7 @@ Resources:
       CodeUri: src/
       Layers:
         - !Ref SwitchBotDatabaseDependenciesLayer
-        - !Sub arn:aws:lambda:${AWS::Region}:133490724326:layer:AWS-Parameters-and-Secrets-Lambda-Extension-Arm64:19
+        - !Ref AWSParametersAndSecretsLambdaExtension
       Environment:
         Variables:
           DATABASE_PATH: !Ref DatabaseParamName
